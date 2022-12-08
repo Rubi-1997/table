@@ -7,7 +7,7 @@ import { faExchangeAlt } from "@fortawesome/free-solid-svg-icons";
 const Table = (props) => {
     const { tableData, tableDataConfig } = props; // use destructuring
 
-    //use Hooks 
+    //use Hooks
     //state change
     const [sorting, setSorting] = useState({ key: "city", ascending: true });
     const [currentUser, setUser] = useState(tableData);
@@ -15,8 +15,13 @@ const Table = (props) => {
         const currentUsersCopy = [...currentUser];
         // sort the Data
         const sortedUser = currentUsersCopy.sort((a, b) => {
+            console.log(sorting.key);
             if (sorting.key === "person") {
                 return a.person.name.localeCompare(b.person.name); // use localeCompare for sort data using -1(asscending) and 1 (decending)
+            } else if (sorting.key === "joiningDate") {
+                let D1 = a[sorting.key].split("/").reverse().join("/");
+                let D2 = b[sorting.key].split("/").reverse().join("/");
+                return D1.localeCompare(D2);
             }
 
             return a[sorting.key].localeCompare(b[sorting.key]);
@@ -36,12 +41,17 @@ const Table = (props) => {
                         {tableDataConfig.map((ele, index) => {
                             return (
                                 <th key={index}>
-
                                     {/* given condition for chaning the person key into name */}
 
-                                    {ele.columnName === "person" ? "Name" :ele.columnName === "email"?"Email Address" :ele.columnName === "joiningDate"?"Joining Date": ele.columnName}    
+                                    {ele.columnName === "person"
+                                        ? "Name"
+                                        : ele.columnName === "email"
+                                        ? "Email Address"
+                                        : ele.columnName === "joiningDate"
+                                        ? "Joining Date"
+                                        : ele.columnName}
                                     {ele.sortVisible ? (
-                                        <FontAwesomeIcon      //use fontawesome for up-down arrow symbol
+                                        <FontAwesomeIcon //use fontawesome for up-down arrow symbol
                                             icon={faExchangeAlt}
                                             transform={{ rotate: 90 }}
                                             flip="horizontal"
@@ -72,7 +82,8 @@ const Table = (props) => {
                                                 </span>
                                             </td>
                                         );
-                                    } else if (itemConfig.columnName === "email") {   // use condition for add anchor tag as link
+                                    } else if (itemConfig.columnName === "email") {
+                                        // use condition for add anchor tag as link
                                         return (
                                             <td className="tadclass1">
                                                 <a href="#">{elePerson[itemConfig.columnName]}</a>
